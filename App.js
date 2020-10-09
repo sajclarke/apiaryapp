@@ -4,6 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Todos from './src/screens/Todos'
+
 function Feed() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -45,6 +47,16 @@ function MyTabs() {
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Tasks"
+        component={Todos}
+        options={{
+          tabBarLabel: 'Tasks',
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="tasks" color={color} size={size} />
           ),
         }}
       />
