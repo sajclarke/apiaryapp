@@ -1,10 +1,32 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Todos from './src/screens/Todos'
+
+const BottomTab = createBottomTabNavigator();
+const TopTab = createMaterialTopTabNavigator();
+
+function Home() {
+  return (
+    <TopTab.Navigator>
+      <TopTab.Screen name="Feed" component={Feed} />
+      <TopTab.Screen name="Messages" component={Map} />
+    </TopTab.Navigator>
+  );
+}
+
+function Map() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Map</Text>
+    </View>
+  );
+}
 
 function Feed() {
   return (
@@ -30,27 +52,35 @@ function Notifications() {
   );
 }
 
-const Tab = createBottomTabNavigator();
+
 
 function MyTabs() {
   return (
-    <Tab.Navigator
+    <BottomTab.Navigator
       initialRouteName="Feed"
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}
     >
-      <Tab.Screen
+      <BottomTab.Screen
         name="Feed"
-        component={Feed}
+        component={Home}
         options={{
+          title: "Feed",
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" color={color} size={size} />
           ),
         }}
       />
-      <Tab.Screen
+      <BottomTab.Screen
         name="Tasks"
         component={Todos}
         options={{
@@ -60,7 +90,7 @@ function MyTabs() {
           ),
         }}
       />
-      <Tab.Screen
+      <BottomTab.Screen
         name="Notifications"
         component={Notifications}
         options={{
@@ -71,7 +101,7 @@ function MyTabs() {
           tabBarBadge: 3,
         }}
       />
-      <Tab.Screen
+      <BottomTab.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -81,14 +111,21 @@ function MyTabs() {
           ),
         }}
       />
-    </Tab.Navigator>
+    </BottomTab.Navigator>
   );
 }
+
+const RootStack = createStackNavigator()
 
 export default function App() {
   return (
     <NavigationContainer>
-      <MyTabs />
+      {/* <MyTabs /> */}
+      <RootStack.Navigator>
+        <RootStack.Screen name="Home" component={MyTabs} />
+        <RootStack.Screen name="Profile" component={Profile} />
+        <RootStack.Screen name="Settings" component={Notifications} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }
