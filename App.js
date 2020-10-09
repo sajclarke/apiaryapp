@@ -15,7 +15,7 @@ function Home() {
   return (
     <TopTab.Navigator>
       <TopTab.Screen name="Feed" component={Feed} />
-      <TopTab.Screen name="Messages" component={Map} />
+      <TopTab.Screen name="Map" component={Map} />
     </TopTab.Navigator>
   );
 }
