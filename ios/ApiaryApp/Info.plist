@@ -37,8 +37,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>This application requests access to your photolibrary to add a photo to your sightings</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Program requires GPS to report sightings</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Program requires GPS to report sightings</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Program requires GPS to report sightings</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -57,6 +63,10 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Fontisto.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
