@@ -32,13 +32,12 @@ export const addTodo = async (postObj) => {
 
 export const addPost = async (postObj) => {
 
-    const { address, imgPath, latitude, longitude, numberTotal, babiesSeen, userId, notes } = postObj
+    const { address, imgPath, latitude, longitude, numberTotal, userId, notes } = postObj
     console.log(postObj)
-    // Firebase.submitThing(postObj)
-    const id = uuid.v4()
+    const id = uuidv4()
     let remoteUri = ''
     if (imgPath) {
-        remoteUri = await Firebase.uploadPhotoAsync(imgPath, `${id}`);
+        remoteUri = await uploadPhotoAsync(imgPath, `${id}`);
     }
     // const remoteUri = await Firebase.uploadPhotoAsync(imgPath, `${id}`);
     // console.log(remoteUri)
@@ -46,7 +45,7 @@ export const addPost = async (postObj) => {
     const uploadData = {
         userId,
         text: address,
-        latitude, longitude, numberTotal, babiesSeen,
+        latitude, longitude, numberTotal,
         // uid: this.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         image: remoteUri,

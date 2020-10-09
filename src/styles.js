@@ -8,6 +8,11 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 30
         // justifyContent: "center"
     },
+    image: {
+        margin: 20,
+        minWidth: 200,
+        height: 200
+    },
     sectionTitle: {
         color: "#333",
         fontSize: 20,

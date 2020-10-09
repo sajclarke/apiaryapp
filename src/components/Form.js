@@ -1,19 +1,85 @@
-import React, { useState } from 'react';
-import { TextInput, Alert, Button, Platform, PermissionsAndroid, Permission, ToastAndroid, Linking } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { TextInput, Alert, Button, Image, Platform, PermissionsAndroid, Permission, Text, ToastAndroid, Linking } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import GeocoderOsm from 'react-native-geocoder-osm';
+import ImagePicker from 'react-native-image-picker';
 // import Geocoder from 'react-native-geocoding';
 import Toast from 'react-native-tiny-toast';
+import { v4 as uuidv4 } from 'uuid';
+
+import { styles } from '../styles'
 
 const UselessTextInput = (props) => {
 
-    const [initialPosition, setPosition] = useState('')
+    const [initialPosition, setPosition] = useState('unknown')
+    const [imgSource, setImage] = useState(null)
+    const [numberTotal, setNumberTotal] = useState(1)
+    const [locationAddress, setLocationAddress] = useState('')
+
+    const [errorMessage, setErrorMessage] = useState('')
 
     const [title, onChangeTitle] = useState('Example Title');
     const [description, onChangeDescription] = useState('Example Description');
+    const [notes, onChangeNote] = useState('Example Description');
+
+    useEffect(() => {
+        // Toast.show('Warning: An error has occurred. Sorry about that', {
+        //     position: 100,
+        //     containerStyle: {
+        //         backgroundColor: 'red'
+        //     },
+        //     textStyle: {
+        //         color: 'white'
+        //     },
+        //     imgStyle: {},
+        //     duration: 1000,
+        //     mask: true,
+        //     maskColor: `rgba(0, 0, 0, 0.3)`
+        // })
+    })
+
+    const showError = (text) => (
+        Toast.show(text, {
+            position: 100,
+            containerStyle: {
+                backgroundColor: 'red'
+            },
+            textStyle: {
+                color: 'white'
+            },
+            imgStyle: {},
+            duration: 1000,
+            mask: true,
+            maskColor: `rgba(0, 0, 0, 0.3)`
+        })
+    )
 
     const handleSubmit = () => {
-        props.onAdd({ title, description })
+        console.log('submitted form', imgPath, locationAddress, numberTotal, latitude, longitude, userId, notes)
+
+        if (locationAddress.length < 1) {
+            showError('Please add a location or a photo')
+            return
+            // } else if (!imgSource) {
+            //     this.setState({ errorMessage: 'Please add a photo' })
+            //     return
+        } else if (numberTotal < 1) {
+            showError('Please indicate how many monkeys you have seen')
+            return
+        } else if (initialPosition === 'unknown') {
+            showError('Please add a location or a photo')
+            return
+        }
+
+        const imgPath = imgSource.uri
+
+        const { latitude, longitude } = initialPosition.coords
+
+        const userId = uuidv4()
+
+
+
+        props.onAdd({ imgPath, locationAddress, numberTotal, latitude, longitude, userId, notes })
     }
 
     const hasLocationPermissionIOS = async () => {
@@ -48,7 +114,7 @@ const UselessTextInput = (props) => {
 
     const hasLocationPermission = async () => {
         if (Platform.OS === 'ios') {
-            const hasPermission = await this.hasLocationPermissionIOS();
+            const hasPermission = await hasLocationPermissionIOS();
             return hasPermission;
         }
 
@@ -125,6 +191,7 @@ const UselessTextInput = (props) => {
                     let addressText = res[0].display_name;
                     console.log(addressText);
                     // this.setState({ location: addressText });
+                    setLocationAddress(addressText)
 
                     Toast.hide(toast)
 
@@ -156,10 +223,157 @@ const UselessTextInput = (props) => {
         // });
     }
 
+    /**
+    * Select image method
+    */
+    const pickImage = () => {
+        ImagePicker.showImagePicker({
+            quality: 1,
+            mediaType: "photo",
+            cameraType: "back",
+            allowsEditing: false,
+            // noData: true,
+            maxWidth: 8000,
+            maxHeight: 8000,
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            }
+        }, async response => {
+            console.log('camera response', response)
+            if (response.didCancel) {
+                // alert('You cancelled image picker 😟');
+                console.log('You cancelled image picker 😟');
+            } else if (response.error) {
+                console.log('An error occured: ', response.error);
+            } else {
+                const imgSource = { uri: response.uri };
+
+                var path = '';
+                if (Platform.OS == 'ios')
+                    path = response.uri.toString();
+                else {
+                    path = response.path.toString();
+                }
+                const image = {
+                    image: response.uri.toString(),
+                    path: path
+                };
+
+                console.log('imgpath', path)
+
+                const { latitude, longitude } = response
+
+                // if (latitude === '' || longitude === '') {
+
+                // }
+
+                let resultObj = {
+                    imgSource: imgSource,
+                    imgPath: path,
+                    imageUri: response.uri,
+                    initialPosition: { coords: { latitude: latitude, longitude: longitude } }
+                }
+
+                console.log('all image info', resultObj)
+                console.log('img source location', imgSource)
+
+                setImage(imgSource)
+
+                // this.setState(resultObj)
+
+                // const geocodedResult = await GeocoderOsm.getGeoCodePosition(latitude, longitude).then((res) => {
+                //     console.log("getGeoCodePosition", res);
+                //     let addressText = res[0].display_name;
+                //     console.log(addressText)
+                //     this.setState({ location: addressText });
+                // }).catch(async (e) => {
+                //     console.log('getGeoCodePosition error', e)
+                //     // alert('An error occurred getting the address location')
+
+                //     const locationResults = await this.findCoordinates()
+                //     console.log(locationResults)
+                // });
+
+                // result.location = geocodedResult
+                // return result
+                // Exif.getLatLong(path)
+                //     .then((result) => {
+                //         console.log(result)
+                //         const { latitude, longitude } = result
+                //         // console.log('OK: ' + latitude + ', ' + longitude)
+                //         // this.setState({
+                //         //     imgSource: source,
+                //         //     imgPath: path,
+                //         //     imageUri: response.uri,
+                //         //     initialPosition: { coords: { latitude: latitude, longitude: longitude } }
+                //         // });
+                //         let resultObj = {
+                //             imgSource: source,
+                //             imgPath: path,
+                //             imageUri: response.uri,
+                //             initialPosition: { coords: { latitude: latitude, longitude: longitude } }
+                //         }
+                //         return resultObj
+                //     })
+                //     .then(async (result) => {
+                //         // console.log(result)
+                //         const { latitude, longitude } = result.initialPosition.coords
+
+                //         const geocodedResult = await GeocoderOsm.getGeoCodePosition(latitude, longitude).then((res) => {
+                //             // res is an Array of geocoding object
+                //             console.log("getGeoCodePosition", res);
+                //             let addressText = res[0].display_name;
+                //             // console.log(addressText);
+                //             return addressText
+                //             // result.location = addressText
+                //             // return result
+                //             // this.setState({ location: addressText });
+                //         }).catch((e) => {
+                //             console.log('getGeoCodePosition error', e)
+                //             alert('An error occurred getting the address location')
+                //         });
+
+                //         result.location = geocodedResult
+                //         return result
+                //     }).then((res) => {
+                //         console.log('image result with location data', res)
+
+                //         this.setState(res)
+                //     })
+                //     .catch(msg => {
+                //         console.error('ERROR: ' + msg)
+                //         alert('An error occurred getting image information')
+                //     })
+
+
+
+            }
+        });
+    };
+
     return (
         <>
+            {initialPosition?.coords && (
+                <>
+                    <Text>Latitude: {initialPosition.coords.latitude}</Text>
+                    <Text>Longitude: {initialPosition.coords.longitude}</Text>
+                    <Text>Address: {locationAddress}</Text>
+                </>)}
+            {imgSource?.uri?.length > 1 && (
+                <>
+                    {/* <Text>{imgSource.uri}</Text> */}
+                    <Image
+                        source={imgSource}
+                        style={styles.image}
+                    />
+                </>
+            )}
             <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 10 }}
+                style={{
+                    height: 40, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 10, fontSize: 15,
+                    color: "#161F3D"
+                }}
                 onChangeText={text => onChangeTitle(text)}
                 placeholder="Enter title"
                 value={title}
@@ -171,13 +385,24 @@ const UselessTextInput = (props) => {
                 value={description}
             />
 
+            <TextInput
+                style={{ height: 100, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 20 }}
+                onChangeText={text => onChangeNote(text)}
+                placeholder="Enter notes"
+                value={notes}
+            />
+
             <Button
-                title="Save New Recordss"
+                title="Save New Records"
                 onPress={handleSubmit}
             />
             <Button
                 title="Get Location"
                 onPress={findCoordinates}
+            />
+            <Button
+                title="Take Photo"
+                onPress={pickImage}
             />
         </>
     );

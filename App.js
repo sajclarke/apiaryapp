@@ -57,16 +57,16 @@ function Notifications() {
 function MyTabs() {
   return (
     <BottomTab.Navigator
-      initialRouteName="Feed"
+      initialRouteName="Home"
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}
     >
       <BottomTab.Screen
-        name="Feed"
+        name="Home"
         component={Home}
         options={{
-          title: "Feed",
+          title: "Home",
           headerStyle: {
             backgroundColor: '#f4511e',
           },
@@ -81,16 +81,16 @@ function MyTabs() {
         }}
       />
       <BottomTab.Screen
-        name="Tasks"
+        name="Sightings"
         component={Todos}
         options={{
-          tabBarLabel: 'Tasks',
+          tabBarLabel: 'Sightings',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="tasks" color={color} size={size} />
+            <Icon name="camera" color={color} size={size} />
           ),
         }}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="Notifications"
         component={Notifications}
         options={{
@@ -100,7 +100,7 @@ function MyTabs() {
           ),
           tabBarBadge: 3,
         }}
-      />
+      /> */}
       <BottomTab.Screen
         name="Profile"
         component={Profile}
@@ -122,9 +122,9 @@ export default function App() {
     <NavigationContainer>
       {/* <MyTabs /> */}
       <RootStack.Navigator>
-        <RootStack.Screen name="Home" component={MyTabs} />
-        <RootStack.Screen name="Profile" component={Profile} />
-        <RootStack.Screen name="Settings" component={Notifications} />
+        <RootStack.Screen name="Apiary" component={MyTabs} />
+        {/* <RootStack.Screen name="Profile" component={Profile} />
+        <RootStack.Screen name="Settings" component={Notifications} /> */}
       </RootStack.Navigator>
     </NavigationContainer>
   );

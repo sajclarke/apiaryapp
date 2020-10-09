@@ -42,7 +42,9 @@ function Todos() {
     const handleAddTodo = async (data) => {
         // console.log(data)
         // console.log(db)
-        await db.addTodo(data)
+
+        // address, imgPath, latitude, longitude, numberTotal, userId, notes
+        await db.addPost(data)
     }
 
     return (
