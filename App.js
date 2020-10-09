@@ -25,14 +25,6 @@ function Map() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Map</Text>
-    </View>
-  );
-}
-
-
-function Feed() {
-  return (
-    <View style={styles.container}>
       <MapView
         style={styles.map}
         region={{
@@ -43,6 +35,15 @@ function Feed() {
         }}
       >
       </MapView>
+    </View>
+  );
+}
+
+
+function Feed() {
+  return (
+    <View style={styles.container}>
+      <Text>Feed</Text>
     </View>
   );
 }
