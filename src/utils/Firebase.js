@@ -32,9 +32,12 @@ export const addTodo = async (postObj) => {
 
 export const addPost = async (postObj) => {
 
-    const { address, imgPath, latitude, longitude, numberTotal, userId, notes } = postObj
+    const { locationAddress, imgPath, latitude, longitude, numberTotal, userId, notes } = postObj
     console.log(postObj)
     const id = uuidv4()
+
+    const toast = Toast.showLoading('Saving....');
+
     let remoteUri = ''
     if (imgPath) {
         remoteUri = await uploadPhotoAsync(imgPath, `${id}`);
@@ -44,7 +47,7 @@ export const addPost = async (postObj) => {
 
     const uploadData = {
         userId,
-        text: address,
+        text: locationAddress,
         latitude, longitude, numberTotal,
         // uid: this.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -52,7 +55,7 @@ export const addPost = async (postObj) => {
         notes: notes,
         completed: false
     };
-    const toast = Toast.showLoading('Saving....');
+
     return firebase
         .firestore()
         .collection('reports')
@@ -150,7 +153,7 @@ export const getPosts = (userId) => {
     return firebase
         .firestore()
         .collection('reports')
-        .orderBy('timestamp', 'desc')
+        // .orderBy('timestamp', 'desc')
         .where("userId", "==", userId.trim())
         // .orderBy('timestamp', 'desc')
         .get()

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Button } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -7,64 +7,91 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Todos from './src/screens/Todos'
+import Feed from './src/screens/FeedScreen';
+import AddPostScreen from './src/screens/AddPostScreen';
+import MapScreen from './src/screens/MapScreen';
+import DetailsScreen from './src/screens/DetailsScreen';
+import InfoScreen from './src/screens/InfoScreen';
+// import Todos from './src/screens/Todos';
 
 const BottomTab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
+
+const RootStack = createStackNavigator();
+const HomeStack = createStackNavigator();
+
+function HomeScreens() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="Feed" component={Home} />
+      <HomeStack.Screen
+        name="Details"
+        component={DetailsScreen}
+        options={{
+          headerTitle: props => 'Details',
+          headerRight: () => (
+            <Button
+              onPress={() => alert('This is a button!')}
+              title="Info"
+              color="#fff"
+            />
+          ),
+        }} />
+    </HomeStack.Navigator>
+  )
+}
 
 function Home() {
   return (
     <TopTab.Navigator>
       <TopTab.Screen name="Feed" component={Feed} />
-      <TopTab.Screen name="Map" component={Map} />
+      <TopTab.Screen name="Map" component={MapScreen} />
     </TopTab.Navigator>
   );
 }
 
-function Map() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Map</Text>
-      <MapView
-        style={styles.map}
-        region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}
-      >
-      </MapView>
-    </View>
-  );
-}
+// function Map() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text>Map</Text>
+//       <MapView
+//         style={styles.map}
+//         region={{
+//           latitude: 37.78825,
+//           longitude: -122.4324,
+//           latitudeDelta: 0.015,
+//           longitudeDelta: 0.0121,
+//         }}
+//       >
+//       </MapView>
+//     </View>
+//   );
+// }
 
 
-function Feed() {
-  return (
-    <View style={styles.container}>
-      <Text>Feed</Text>
-    </View>
-  );
-}
+// function Details() {
+//   return (
+//     <View style={styles.container}>
+//       <Text>Feed Details</Text>
+//     </View>
+//   );
+// }
 
-function Profile() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
-    </View>
-  );
-}
+// function Profile() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text>Profile!</Text>
+//     </View>
+//   );
+// }
 
-function Notifications() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Notifications!</Text>
-    </View>
-  );
-}
-
-
+// function Notifications() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text>Notifications!</Text>
+//     </View>
+//   );
+// }
 
 function MyTabs() {
   return (
@@ -76,7 +103,7 @@ function MyTabs() {
     >
       <BottomTab.Screen
         name="Home"
-        component={Home}
+        component={HomeScreens}
         options={{
           title: "Home",
           headerStyle: {
@@ -94,7 +121,7 @@ function MyTabs() {
       />
       <BottomTab.Screen
         name="Sightings"
-        component={Todos}
+        component={AddPostScreen}
         options={{
           tabBarLabel: 'Sightings',
           tabBarIcon: ({ color, size }) => (
@@ -114,12 +141,12 @@ function MyTabs() {
         }}
       /> */}
       <BottomTab.Screen
-        name="Profile"
-        component={Profile}
+        name="Info"
+        component={InfoScreen}
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'Info',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="user" color={color} size={size} />
+            <Icon name="info-circle" color={color} size={size} />
           ),
         }}
       />
@@ -127,7 +154,7 @@ function MyTabs() {
   );
 }
 
-const RootStack = createStackNavigator();
+
 
 export default function App() {
   return (

@@ -8,10 +8,21 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 30
         // justifyContent: "center"
     },
+    screenContainer: {
+        flex: 1,
+        // justifyContent: 'center',
+        // paddingTop: STATUSBAR_HEIGHT,
+        backgroundColor: '#ecf0f1',
+        paddingLeft: 8,
+        paddingRight: 8,
+    },
     image: {
         margin: 20,
         minWidth: 200,
         height: 200
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,
     },
     sectionTitle: {
         color: "#333",
@@ -41,5 +52,18 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         lineHeight: 24,
         paddingTop: 10
-    }
+    },
+    button: {
+        marginHorizontal: 30,
+        marginVertical: 10,
+        backgroundColor: "green",
+        borderRadius: 4,
+        height: 52,
+        alignItems: "center",
+        justifyContent: "center",
+
+    },
+    buttonText: {
+        color: "#FFF", fontWeight: "bold", fontSize: 18, textTransform: 'uppercase'
+    },
 });

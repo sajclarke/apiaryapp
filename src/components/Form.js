@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { TextInput, Alert, Button, Image, Platform, PermissionsAndroid, Permission, Text, ToastAndroid, Linking } from 'react-native';
+import { View, TextInput, Alert, Button, Image, Platform, Pressable, PermissionsAndroid, Permission, Text, TouchableOpacity, ToastAndroid, Linking } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import GeocoderOsm from 'react-native-geocoder-osm';
 import ImagePicker from 'react-native-image-picker';
 // import Geocoder from 'react-native-geocoding';
 import Toast from 'react-native-tiny-toast';
+import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 import { styles } from '../styles'
 
-const UselessTextInput = (props) => {
+const Form = (props) => {
 
     const [initialPosition, setPosition] = useState('unknown')
     const [imgSource, setImage] = useState(null)
@@ -55,7 +56,7 @@ const UselessTextInput = (props) => {
     )
 
     const handleSubmit = () => {
-        console.log('submitted form', imgPath, locationAddress, numberTotal, latitude, longitude, userId, notes)
+        console.log('submitted form', imgPath, locationAddress, numberTotal, latitude, longitude, notes)
 
         if (locationAddress.length < 1) {
             showError('Please add a location or a photo')
@@ -77,9 +78,7 @@ const UselessTextInput = (props) => {
 
         const userId = uuidv4()
 
-
-
-        props.onAdd({ imgPath, locationAddress, numberTotal, latitude, longitude, userId, notes })
+        props.onAdd({ imgPath, locationAddress, numberTotal, latitude, longitude, notes })
     }
 
     const hasLocationPermissionIOS = async () => {
@@ -280,6 +279,8 @@ const UselessTextInput = (props) => {
 
                 setImage(imgSource)
 
+                findCoordinates()
+
                 // this.setState(resultObj)
 
                 // const geocodedResult = await GeocoderOsm.getGeoCodePosition(latitude, longitude).then((res) => {
@@ -353,59 +354,76 @@ const UselessTextInput = (props) => {
     };
 
     return (
-        <>
-            {initialPosition?.coords && (
-                <>
-                    <Text>Latitude: {initialPosition.coords.latitude}</Text>
-                    <Text>Longitude: {initialPosition.coords.longitude}</Text>
-                    <Text>Address: {locationAddress}</Text>
-                </>)}
-            {imgSource?.uri?.length > 1 && (
-                <>
-                    {/* <Text>{imgSource.uri}</Text> */}
-                    <Image
-                        source={imgSource}
-                        style={styles.image}
-                    />
-                </>
-            )}
-            <TextInput
-                style={{
-                    height: 40, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 10, fontSize: 15,
-                    color: "#161F3D"
-                }}
-                onChangeText={text => onChangeTitle(text)}
-                placeholder="Enter title"
-                value={title}
-            />
-            <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 20 }}
-                onChangeText={text => onChangeDescription(text)}
-                placeholder="Enter description"
-                value={description}
-            />
+        <View style={styles.screenContainer}>
+            <View style={{ flexGrow: 1 }}>
+                <Pressable
+                    style={styles.button}
+                    onPress={findCoordinates}
+                >
+                    <Text style={styles.buttonText}>Get Location</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.button}
+                    onPress={pickImage}
+                >
+                    <Text style={styles.buttonText}>Take Photo</Text>
+                </Pressable>
 
-            <TextInput
-                style={{ height: 100, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 20 }}
-                onChangeText={text => onChangeNote(text)}
-                placeholder="Enter notes"
-                value={notes}
-            />
+                {initialPosition?.coords && (
+                    <>
+                        <Text>Latitude: {initialPosition.coords.latitude}</Text>
+                        <Text>Longitude: {initialPosition.coords.longitude}</Text>
+                        <Text>Address: {locationAddress}</Text>
+                    </>)}
+                {imgSource?.uri?.length > 1 && (
+                    <>
+                        <Image
+                            source={imgSource}
+                            style={styles.image}
+                        />
+                    </>
+                )}
+                <TextInput
+                    style={{
+                        height: 40, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 10, fontSize: 15,
+                        color: "#161F3D"
+                    }}
+                    onChangeText={text => onChangeTitle(text)}
+                    placeholder="Enter title"
+                    value={title}
+                />
+                <TextInput
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 20 }}
+                    onChangeText={text => onChangeDescription(text)}
+                    placeholder="Enter description"
+                    value={description}
+                />
 
-            <Button
-                title="Save New Records"
-                onPress={handleSubmit}
-            />
-            <Button
-                title="Get Location"
-                onPress={findCoordinates}
-            />
-            <Button
-                title="Take Photo"
-                onPress={pickImage}
-            />
-        </>
+                <TextInput
+                    style={{ height: 100, borderColor: 'gray', borderWidth: 1, padding: 10, marginTop: 20 }}
+                    onChangeText={text => onChangeNote(text)}
+                    placeholder="Enter notes"
+                    value={notes}
+                />
+
+                {/* <Button
+                    title="Save New Records"
+                    onPress={handleSubmit}
+                /> */}
+
+            </View>
+            {/* <View style={{ flex: 2, backgroundColor: 'skyblue' }}></View> */}
+            {/* <View style={{ flex: 1, backgroundColor: 'steelblue' }}></View> */}
+            <View style={{ flex: 1, justifyContent: 'flex-end', padding: 10 }}>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <View style={{ textAlign: 'center', paddingHorizontal: 20 }}>
+                        <Text style={[styles.buttonText]}>Submit</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
+        </View>
     );
 }
 
-export default UselessTextInput;
+export default Form;
